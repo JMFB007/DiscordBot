@@ -7,7 +7,7 @@ import other
 from StaynAlive import StaynAlive
 
 #joke, snake, card and dice games, be on github
-#poggers
+#poggers poggers 
 
 my_secret = os.environ['TOKEN']
 client = discord.Client()
