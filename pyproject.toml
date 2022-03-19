@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "repl_python3_DiscPythDNDBot"
-version = "0.1.0"
-description = ""
-authors = ["Your Name <you@example.com>"]
+version = "0.2.0"
+description = "Discord bot using python"
+authors = ["Your Name @SlumSnep"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
