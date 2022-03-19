@@ -1,3 +1,24 @@
 {
-  "files": {}
+  "files": {
+    "cogs/test2.py": [
+      {
+        "id": "f79bbea4-5bee-46e5-8c8c-5c3cacbb8148",
+        "line": 2,
+        "version": 3,
+        "index": 33
+      },
+      {
+        "id": "ee2b0feb-a346-4443-ba34-4d991729efc2",
+        "line": 9,
+        "version": 3,
+        "index": 132
+      },
+      {
+        "id": "194530d3-f6dd-4a84-806d-4e593bec9f52",
+        "line": 11,
+        "version": 3,
+        "index": 190
+      }
+    ]
+  }
 }
