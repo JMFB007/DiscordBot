@@ -1,47 +1,57 @@
 import os
-from discord.ext import commands#, tasks
+from discord.ext import commands, tasks
 from StaynAlive import StaynAlive
-#prefix loader
-client = commands.Bot(command_prefix = "-")
 
-@client.event#starter message
+bot = commands.Bot(command_prefix = "-")#, help_command=None)
+
+@bot.event
 async def on_ready():
-    print("Logged in as {0.user}".format(client))
-  
-'''@client.command()#test and ping
-async def test(ctx):
-  await ctx.send(f"ok! ping: {client.latency*1000}ms")'''
+    print("Logged in as {0.user}".format(bot))
 
-@client.command(aliases=["l"])#loads a cog
+@tasks.loop(seconds=10)
+async def change_status():
+  await bot.change_presence(activity="working!")
+
+@bot.command(aliases=["l"], brief="Loads a cog", description="long part")
 async def load(ctx, extension):
   try:
-    client.load_extension(f"cogs.{extension}")
+    bot.load_extension(f"cogs.{extension}")
   except:
     await ctx.send(f"{extension} is already loaded or doesnt exist")
   else:
     await ctx.send(f"{extension} was loaded")
-@client.command(aliases=["u"])#unloads a cog
+    
+@bot.command(aliases=["u"])
 async def unload(ctx, extension):
   try:
-    client.unload_extension(f"cogs.{extension}")
+    bot.unload_extension(f"cogs.{extension}")
   except:
     await ctx.send(f"{extension} is already unloaded or doesnt exist")
   else:
     await ctx.send(f"{extension} was unloaded")
-@client.command(aliases=["r"])#reloads a cog
+    
+@bot.command(aliases=["r"])
 async def reload(ctx, extension):
   try:
-    client.unload_extension(f"cogs.{extension}")
-    client.load_extension(f"cogs.{extension}")
+    bot.unload_extension(f"cogs.{extension}")
+    bot.load_extension(f"cogs.{extension}")
   except:
     await ctx.send(f"{extension} doesnt exist")
   else:
     await ctx.send(f"{extension} was reloaded")
-for filename in os.listdir("./cogs"):#cog loader
+
+@bot.command(aliases=["fr"])
+async def fullreload(ctx):
+  for filename in os.listdir("./cogs"):
+    if filename.endswith(".py"):
+      bot.unload_extension(f"cogs.{filename[:-3]}")
+      bot.load_extension(f"cogs.{filename[:-3]}")
+  await ctx.send("All cogs were reloaded!")
+  
+for filename in os.listdir("./cogs"):
   if filename.endswith(".py"):
-    client.load_extension(f"cogs.{filename[:-3]}")
+    bot.load_extension(f"cogs.{filename[:-3]}")
     
-#things for the client to run
 my_secret = os.environ['TOKEN']
 StaynAlive()
-client.run(my_secret)
+bot.run(my_secret)

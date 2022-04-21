@@ -4,8 +4,8 @@ import random
 class Dnd(commands.Cog):
   def __init__(self, bot):
     self.client = bot
-  #commands
-  @commands.command()#-roll 3d20
+    
+  @commands.command()
   async def roll(self, ctx):
     plus = 0
     try:
@@ -31,6 +31,29 @@ class Dnd(commands.Cog):
         await ctx.send("Too many rolls to send")
       else:
         await ctx.send(f"Rolls: `{s}`")
+
+  @commands.command()
+  async def random(self, ctx):
+    r = ctx.message.content[6:]
+    n = 0
+    while r[n].isdigit():
+      n += 1
+    if n == 0:
+      return "ERRORnum"
+    a = r[0:(n-len(r))]
+    if not(r[n] == "-"):
+      return "ERROR"
+    r = r[n+1:]
+    n = 0
+    while r[n].isdigit() and r[n] != None:
+      n += 1
+    if n == 0:
+      return r[n] + "lol"
+    b = r[0:(n-len(r))]
+    if int(a)<int(b):
+      return "ERROR"
+    else:
+      return random.randint(int(a),int(b))
   
 def setup(bot):
   bot.add_cog(Dnd(bot))

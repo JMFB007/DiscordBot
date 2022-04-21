@@ -1,13 +1,24 @@
+import discord
 from discord.ext import commands
+from discord.utils import get
 import requests
 import json
 
-class Misc(commands.Cog):
+class Basics(commands.Cog):
   
   def __init__(self, bot):
     self.bot = bot
+
+  @commands.command(aliases=["h"])
+  async def ayuda(self, ctx):
+    slum = 588231330924593164
+    if ctx.author.id == slum:
+      embed = discord.Embed(title="HELP", description=f"wanana banana\nxd \n\n<@{slum}>:sunglasses:")
+      await ctx.send(embed=embed)
+    else:
+      await ctx.send("*cursiva* **negrita** ***cursiva negrita*** __subrayado__ `linea de codigo` ```multilinea de codigo``` >>> normal con linea a la izq")
   
-  @commands.command()
+  @commands.command(aliases=["c"])
   async def clear(self, ctx, amount=1):
     await ctx.channel.purge(limit = (amount+1))
   
@@ -32,4 +43,4 @@ class Misc(commands.Cog):
     await ctx.send(quote)
   
 def setup(bot):
-  bot.add_cog(Misc(bot))
+  bot.add_cog(Basics(bot))
