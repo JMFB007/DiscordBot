@@ -45,7 +45,7 @@ class Basics(commands.Cog):
     if member != "":
       await ctx.channel.purge(limit = 1)
     await ctx.send(quote)
-#NNNNNNNNNNNNNNNNNNNNNNNNNNNN
+
   @commands.group(name='Notes',aliases=["notes","n"], brief="All note taking commands", invoke_without_command=True)
   async def Notes(self, ctx, arg=None):
     if arg == None:
