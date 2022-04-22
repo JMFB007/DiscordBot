@@ -1,6 +1,7 @@
 import discord
+import os
 from discord.ext import commands
-from discord.utils import get
+#from discord.utils import get
 import requests
 import json
 
@@ -9,21 +10,22 @@ class Basics(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
 
-  @commands.command(aliases=["h"])
+  @commands.command(name="aiuda",aliases=["h"])
   async def ayuda(self, ctx):
-    slum = 588231330924593164
-    if ctx.author.id == slum:
-      embed = discord.Embed(title="HELP", description=f"wanana banana\nxd \n\n<@{slum}>:sunglasses:")
+    SLUM = os.environ['SLUM']
+    if ctx.author.id == SLUM:
+      embed = discord.Embed(title="LIST OF COMPLETE COMMANDS", description=f"BASICS: ayuda, clear, compliment, inspirational_quote\nDND: random, roll\nFUN: insulto\nMUSIC: join, leave, play\n\nCOMMANDS ONLY <@{SLUM}> CAN USE:\nload, unload, reload, full_reload")
       await ctx.send(embed=embed)
     else:
-      await ctx.send("*cursiva* **negrita** ***cursiva negrita*** __subrayado__ `linea de codigo` ```multilinea de codigo``` >>> normal con linea a la izq")
+      embed = discord.Embed(title="List of Commands", description=f"BASICS: ayuda, clear, compliment, inspirational_quote\nDND: random, roll\nFUN: insulto\nMUSIC: join, leave, play")
+      await ctx.send(embed=embed)
   
   @commands.command(aliases=["c"])
   async def clear(self, ctx, amount=1):
     await ctx.channel.purge(limit = (amount+1))
   
   @commands.command(aliases=["insp"])
-  async def inspquote(self, ctx):
+  async def inspirational_quote(self, ctx):
     response = requests.get("https://zenquotes.io/api/random")
     json_data = json.loads(response.text)
     quote = "*" + json_data[0]["q"].rstrip() + "*" + " - " + json_data[0]["a"]
