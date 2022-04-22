@@ -5,7 +5,7 @@ class Dnd(commands.Cog):
   def __init__(self, bot):
     self.client = bot
     
-  @commands.command()
+  @commands.command(name="Roll", aliases=["roll"], brief="Rolls a dice")
   async def roll(self, ctx):
     plus = 0
     try:
@@ -32,7 +32,7 @@ class Dnd(commands.Cog):
       else:
         await ctx.send(f"Rolls: `{s}`")
 
-  @commands.command()
+  @commands.command(name="Random", aliases=["random"], brief="Shows a random number between 2")
   async def random(self, ctx):
     r = ctx.message.content[6:]
     n = 0

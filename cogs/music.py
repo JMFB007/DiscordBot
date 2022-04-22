@@ -47,7 +47,7 @@ class Music(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(description="joins a voice channel")
+    @commands.command(name="Join",aliases=["join"], brief="Joins your VC",description="joins a voice channel")
     async def join(self, ctx):
         if ctx.author.voice is None or ctx.author.voice.channel is None:
             return await ctx.send('You need to be in a voice channel to use this command!')
@@ -58,7 +58,7 @@ class Music(commands.Cog):
             await ctx.voice_client.move_to(voice_channel)
             vc = ctx.voice_client#?
 
-    @commands.command(description="streams music")
+    @commands.command(name="Play",aliases=["play"], brief="Plays music in VC",description="streams music")
     async def play(self, ctx):
       if " " not in ctx.message.content:
         await ctx.send("Please add a youtube link play")
@@ -70,7 +70,7 @@ class Music(commands.Cog):
         embed = discord.Embed(title="Now playing", description=f"[{player.title}]({player.url})[{ctx.author.mention}]")
         await ctx.send(embed=embed)
 
-    @commands.command(description="stops and disconnects the bot from voice")
+    @commands.command(name="Leave",aliases=["leave","fuck off"], brief="Leaves the VC",description="stops and disconnects the bot from voice")
     async def leave(self, ctx):
         await ctx.voice_client.disconnect()
 
