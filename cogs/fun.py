@@ -4,7 +4,7 @@ import random
 class Fun(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
-
+#test all
   @commands.command(name="Roll", aliases=["roll"], brief="Rolls a dice")
   async def roll(self, ctx, *, args):
     try:

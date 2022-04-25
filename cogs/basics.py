@@ -7,10 +7,10 @@ import json
 class Basics(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
-
+#test all
   @commands.command(name="Ayuda",aliases=["h","ayuda","aiuda"], brief="Actual help command")
   async def ayuda(self, ctx):#hacer ayuda categoria y comando
-    SLUM = os.environ['SLUM']#categorias: diversion, moderacion, musica, notas
+    SLUM = os.environ['SLUM']
     if str(ctx.author.id) == str(SLUM):
       embed = discord.Embed(title="**Slum'sMightyBot FULL command list:**", description=f":cyclone: **GENERAL**\n-   Ayuda, Clear, Compliment, Insp.Quote\n:video_game: **FUN**\n-   Random, Roll, Insult\n:musical_note: **MUSIC**\n-   Join, Leave, Play\n:notepad_spiral: **NOTES**\n-   New, Delete, Show\n\n:face_in_clouds: **COMMANDS ONLY <@{SLUM}> CAN USE**\n-   Load, Unload, Reload, FullReload, Databases", color=0x9ecdc7)
       await ctx.send(embed=embed)
