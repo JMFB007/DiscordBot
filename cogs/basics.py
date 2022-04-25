@@ -1,32 +1,38 @@
-import discord
-import os
+import os, discord
 from discord.ext import commands
 from replit import db
-#import AsyncDatabase from replit.database
-#from discord.utils import get
 import requests
 import json
-
+#Colores: 0x9ecdc7 0x007397
 class Basics(commands.Cog):
-  
   def __init__(self, bot):
     self.bot = bot
 
   @commands.command(name="Ayuda",aliases=["h","ayuda","aiuda"], brief="Actual help command")
-  async def ayuda(self, ctx):
-    SLUM = os.environ['SLUM']
+  async def ayuda(self, ctx):#hacer ayuda categoria y comando
+    SLUM = os.environ['SLUM']#categorias: diversion, moderacion, musica, notas
     if str(ctx.author.id) == str(SLUM):
-      embed = discord.Embed(title="LIST OF COMPLETE COMMANDS", description=f"BASICS: Ayuda, Clear, Compliment, Insp.Quote\nDND: Random, Roll\nFUN: Insult\nMUSIC: Join, Leave, Play\n\nCOMMANDS ONLY <@{SLUM}> CAN USE:\nLoad, Unload, Reload, FullReload")
+      embed = discord.Embed(title="**Slum'sMightyBot FULL command list:**", description=f":cyclone: **GENERAL**\n-   Ayuda, Clear, Compliment, Insp.Quote\n:video_game: **FUN**\n-   Random, Roll, Insult\n:musical_note: **MUSIC**\n-   Join, Leave, Play\n:notepad_spiral: **NOTES**\n-   New, Delete, Show\n\n:face_in_clouds: **COMMANDS ONLY <@{SLUM}> CAN USE**\n-   Load, Unload, Reload, FullReload, Databases", color=0x9ecdc7)
       await ctx.send(embed=embed)
     else:
-      embed = discord.Embed(title="List of Commands", description=f"BASICS: Ayuda, Clear, Compliment, Insp.Quote\nDND: Random, Roll\nFUN: Insult\nMUSIC: Join, Leave, Play")
+      embed = discord.Embed(title="**Slum'sMightyBot FULL command list:**", description=f":cyclone: **GENERAL**\n-   Ayuda, Clear, Compliment, Insp.Quote\n:video_game: **FUN**\n-   Random, Roll, Insult\n:musical_note: **MUSIC**\n-   Join, Leave, Play\n:notepad_spiral: **NOTES**\n-   New, Delete, Show", color=0x9ecdc7)
       await ctx.send(embed=embed)
+      
+  @commands.command(name="Databases",aliases=["db","databases"], brief="Shows all keys in the Database")
+  async def databases(self, ctx):
+    if str(ctx.author.id) == str(os.environ['SLUM']):
+      s = "**- This are all the keys in the Database:**\n"
+      for key in db.keys():
+        s += str(key) + "\n"
+      await ctx.send(s)
+    else:
+      await ctx.send(f"{ctx.author.id}, you cant use this command")
   
-  @commands.command(name="Clear",aliases=["c"], brief="Deletes a number of messages")
+  @commands.command(name="Clear",aliases=["c", "clear"], brief="Deletes a number of messages")
   async def clear(self, ctx, amount=1):
     await ctx.channel.purge(limit = (amount+1))
   
-  @commands.command(name="Insp.Quote",aliases=["insp", "inspirational quote"], brief="Shows an inspirational quote")
+  @commands.command(name="Insp.Quote",aliases=["insp", "inspirationalquote"], brief="Shows an inspirational quote")
   async def inspirational_quote(self, ctx):
     response = requests.get("https://zenquotes.io/api/random")
     json_data = json.loads(response.text)
@@ -60,17 +66,24 @@ class Basics(commands.Cog):
       await ctx.send(f"{arg} is not a subcommand of Notes")
 
   @Notes.command(name="New",aliases=["new"], brief="Makes a new note")
-  async def new(self, ctx, argt=None, argn=None):
-    if argt != None and argn != None:
+  async def new(self, ctx, *, arg=None):
+    try:#agregar boton de si deverdad desea reemplazar
+      argt = argn = ""
+      arg = arg.split("-",1)
+      argt = arg[0].strip()
+      argn = arg[1].strip()
+    except:
+      pass
+    if argt == "" or argn == "":
+      await ctx.send("Please add the note like this\n`-n new <Title> - <Note>`")
+    else:
       db[str(ctx.message.guild.id)][str(argt)] = str(argn)
       await ctx.send("The note has been added!")
       embed = discord.Embed(title=argt, description=db[str(ctx.message.guild.id)][str(argt)])
       await ctx.send(embed=embed)
-    else:
-      await ctx.send("Please add the title of the note and its contents to make a new note")
       
   @Notes.command(name="Delete",aliases=["delete","del"], brief="Deletes a note")
-  async def delete(self, ctx, argt=None):
+  async def delete(self, ctx, *, argt=None):
     if argt != None:
       Book = db[str(ctx.message.guild.id)]
       s = ""
@@ -86,7 +99,7 @@ class Basics(commands.Cog):
       await ctx.send("Please add the title of the note to delete it")
     
   @Notes.command(name="Show",aliases=["show"], brief="Shows a specific note")
-  async def show(self, ctx, arg=None):
+  async def show(self, ctx, *, arg=None):
     if arg != None:
       Book = db[str(ctx.message.guild.id)]
       embed = None

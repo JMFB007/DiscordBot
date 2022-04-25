@@ -1,5 +1,4 @@
-import os
-import discord
+import os, discord
 from discord.ext import commands, tasks
 from replit import db
 from StaynAlive import StaynAlive
@@ -9,29 +8,21 @@ SLUM = os.environ['SLUM']
 
 @bot.event
 async def on_ready():
-  print("Logged in as {0.user}".format(bot))
+  print("Logged in as: {0.user}".format(bot))
   change_status.start()
-  
-@bot.event
-async def on_guild_join(guild):
-    db[guild.id] = {"Note":"This is a note"}
-      
-@tasks.loop(seconds=10)
+
+@tasks.loop(seconds=3600)
 async def change_status():
   await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="your orders!"))
 
-@bot.command(name="Databases",aliases=["db"])
-async def databases(ctx):
-  if str(ctx.author.id) == str(SLUM):
-    if str(ctx.message.guild.id) not in db.keys():
-      await ctx.send(ctx.message.guild.id)
-      db[str(ctx.message.guild.id)] = {"Note":"This is a note"}
-      await ctx.send(f"{ctx.message.guild.name} servers space was created")
-    await ctx.send("This are all the keys in the Database:")
-    for key in db.keys():
-      await ctx.send("svr: " +key)
-  else:
-    await ctx.send(f"{ctx.author.id}, you cant use this command")
+@bot.event
+async def on_guild_join(guild):
+  db[str(guild.id)] = {"Note":"This is a note"}
+  
+@bot.event
+async def on_guild_remove(guild):
+  await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="left server!"))
+  del db[str(guild.id)]
 
 @bot.command(name="Load",aliases=["l","load"], brief="Loads a cog")
 async def load(ctx, extension):
