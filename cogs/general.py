@@ -5,7 +5,7 @@ import requests
 import json
 #Colores: 0x9ecdc7 0x007397
 class General(commands.Cog):
-  def __init__(self, bot):#solucionar que pasa si arg no numero
+  def __init__(self, bot):
     self.bot = bot
 
   @commands.command(name="Ayuda",aliases=["h","ayuda","aiuda"], brief="Actual help command")
@@ -29,9 +29,10 @@ class General(commands.Cog):
       await ctx.send(f"<@{ctx.author.id}>, you cant use this command")
   
   @commands.command(name="Clear",aliases=["c", "clear"], brief="Deletes a number of messages")
-  async def clear(self, ctx, amount=1):
+  async def clear(self, ctx, amount = None):
     try:
-      await ctx.channel.purge(limit = (amount+1))
+      amount = (int(amount)+1)
+      await ctx.channel.purge(limit = amount)
     except:
       await ctx.send("Wrong command, please do `-clear #`")
       
