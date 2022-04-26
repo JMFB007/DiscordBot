@@ -9,7 +9,7 @@ from youtube_dl import YoutubeDL
 youtube_dl.utils.bug_reports_message = lambda: ''
 #bind to ipv4 since ipv6 addresses cause issues sometimes
 ytdl_format_options = {
-    'format': 'bestaudio/best',
+    'format': 'bestaudio/best',#REMAKE THIS SHIT
     'outtmpl': '%(extractor)s-%(id)s-%(title)s.%(ext)s',
     'restrictfilenames': True,
     'noplaylist': True,
@@ -33,7 +33,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         self.data = data
         self.title = data.get('title')
         self.url = data.get('url')
-#test all
+
     @classmethod
     async def from_url(cls, url, *, loop=None, stream=False):
         loop = loop or asyncio.get_event_loop()
@@ -53,10 +53,10 @@ class Music(commands.Cog):
             return await ctx.send('You need to be in a voice channel to use this command!')
         voice_channel = ctx.author.voice.channel
         if ctx.voice_client is None:
-          vc = await voice_channel.connect()#?
+          vc = await voice_channel.connect()
         else:
             await ctx.voice_client.move_to(voice_channel)
-            vc = ctx.voice_client#?
+            vc = ctx.voice_client
 
     @commands.command(name="Play",aliases=["play"], brief="Plays music in VC")
     async def play(self, ctx):

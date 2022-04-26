@@ -34,7 +34,7 @@ async def load(ctx, extension):
     else:
       await ctx.send(f"{extension} was loaded")
   else:
-    await ctx.send(f"{ctx.author.id}, you cant use this command")
+    await ctx.send(f"<@{ctx.author.id}>, you cant use this command")
     
 @bot.command(name="Unload",aliases=["u","unload"], brief="Unloads a cog")
 async def unload(ctx, extension):
@@ -46,7 +46,7 @@ async def unload(ctx, extension):
     else:
       await ctx.send(f"{extension} was unloaded")
   else:
-    await ctx.send(f"{ctx.author.id}, you cant use this command")
+    await ctx.send(f"<@{ctx.author.id}>, you cant use this command")
     
 @bot.command(name="Reload",aliases=["r","reload"], brief="Reloads a cog")
 async def reload(ctx, extension):
@@ -59,7 +59,7 @@ async def reload(ctx, extension):
     else:
       await ctx.send(f"{extension} was reloaded")
   else:
-    await ctx.send(f"{ctx.author.id}, you cant use this command")
+    await ctx.send(f"<@{ctx.author.id}>, you cant use this command")
 
 @bot.command(name="FullReload",aliases=["fr","fullreload"], brief="Reloads ALL cogs")
 async def full_reload(ctx):

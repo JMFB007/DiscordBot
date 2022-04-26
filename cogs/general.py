@@ -4,10 +4,10 @@ from replit import db
 import requests
 import json
 #Colores: 0x9ecdc7 0x007397
-class Basics(commands.Cog):
-  def __init__(self, bot):
+class General(commands.Cog):
+  def __init__(self, bot):#solucionar que pasa si arg no numero
     self.bot = bot
-#test all
+
   @commands.command(name="Ayuda",aliases=["h","ayuda","aiuda"], brief="Actual help command")
   async def ayuda(self, ctx):#hacer ayuda categoria y comando
     SLUM = os.environ['SLUM']
@@ -26,12 +26,15 @@ class Basics(commands.Cog):
         s += str(key) + "\n"
       await ctx.send(s)
     else:
-      await ctx.send(f"{ctx.author.id}, you cant use this command")
+      await ctx.send(f"<@{ctx.author.id}>, you cant use this command")
   
   @commands.command(name="Clear",aliases=["c", "clear"], brief="Deletes a number of messages")
   async def clear(self, ctx, amount=1):
-    await ctx.channel.purge(limit = (amount+1))
-  
+    try:
+      await ctx.channel.purge(limit = (amount+1))
+    except:
+      await ctx.send("Wrong command, please do `-clear #`")
+      
   @commands.command(name="Insp.Quote",aliases=["insp", "inspirationalquote"], brief="Shows an inspirational quote")
   async def inspirational_quote(self, ctx):
     response = requests.get("https://zenquotes.io/api/random")
@@ -40,19 +43,16 @@ class Basics(commands.Cog):
     await ctx.send(quote)
 
   @commands.command(name="Compliment",aliases=["comp","compliment"], brief="Shows/sends a compliment")
-  async def compliment(self, ctx):
-    if " " in ctx.message.content:
-      member = (ctx.message.content).split(" ")[-1]
-    else:
-      member = ""
+  async def compliment(self, ctx, arg = None):
     response = requests.get("https://complimentr.com/api")
     json_data = json.loads(response.text)
-    quote = json_data["compliment"] + " " + member
-    if member != "":
+    if arg == None:
+      await ctx.send(json_data["compliment"])
+    else:
       await ctx.channel.purge(limit = 1)
-    await ctx.send(quote)
-
-  @commands.group(name='Notes',aliases=["notes","n"], brief="All note taking commands", invoke_without_command=True)
+      await ctx.send(json_data["compliment"] + " " + arg)
+      
+  @commands.group(name='Notes',aliases=["notes","n","Note","note"], brief="All note taking commands", invoke_without_command=True)
   async def Notes(self, ctx, arg=None):
     if arg == None:
       await ctx.send("Write `-n new/del/show` to use the notes")
@@ -114,4 +114,4 @@ class Basics(commands.Cog):
       await ctx.send("Please add the title of a note to search it")
     
 def setup(bot):
-  bot.add_cog(Basics(bot))
+  bot.add_cog(General(bot))
