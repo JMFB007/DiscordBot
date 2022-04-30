@@ -56,49 +56,89 @@ class General(commands.Cog):
   @commands.group(name='Notes',aliases=["notes","n","Note","note"], brief="All note taking commands", invoke_without_command=True)
   async def Notes(self, ctx, arg=None):
     if arg == None:
-      await ctx.send("Write `-n new/del/show` to use the notes")
+      await ctx.send("Write `-n new/delete/edit/show` to use the notes")
       Book = db[str(ctx.message.guild.id)]
       s = ""
       for key in Book:
         s += f"**{key}**\n"
-      embed = discord.Embed(title="   NOTES:", description=s)
+      embed = discord.Embed(title="   NOTES:", description=s, color=0x9ecdc7)
       await ctx.send(embed=embed)
     else:
       await ctx.send(f"{arg} is not a subcommand of Notes")
 
   @Notes.command(name="New",aliases=["new"], brief="Makes a new note")
   async def new(self, ctx, *, arg=None):
-    try:#agregar boton de si deverdad desea reemplazar
+    try:
       argt = argn = ""
       arg = arg.split("-",1)
       argt = arg[0].strip()
       argn = arg[1].strip()
     except:
-      pass
-    if argt == "" or argn == "":
       await ctx.send("Please add the note like this\n`-n new <Title> - <Note>`")
     else:
-      db[str(ctx.message.guild.id)][str(argt)] = str(argn)
-      await ctx.send("The note has been added!")
-      embed = discord.Embed(title=argt, description=db[str(ctx.message.guild.id)][str(argt)])
-      await ctx.send(embed=embed)
+      if argt == "" or argn == "":
+        await ctx.send("Please add the note like this\n`-n new <Title> - <Note>`")
+      else:
+        Book = db[str(ctx.message.guild.id)]
+        flag = True
+        for key in Book:
+          if str(key) == str(argt):
+            flag = False
+        if flag:
+          db[str(ctx.message.guild.id)][str(argt)] = str(argn)
+          await ctx.send("The note has been added!")
+          embed = discord.Embed(title=argt, description=db[str(ctx.message.guild.id)][str(argt)], color=0x9ecdc7)
+          await ctx.send(embed=embed)
+        else:
+          await ctx.send("This note already exists, to edit a note do `-n edit <title> - <new note>`")
       
   @Notes.command(name="Delete",aliases=["delete","del"], brief="Deletes a note")
-  async def delete(self, ctx, *, argt=None):
-    if argt != None:
+  async def delete(self, ctx, *, key=None):#test
+    if key != None:
       Book = db[str(ctx.message.guild.id)]
       s = ""
-      for key in Book:
-        if str(key) == str(argt):
-          s = f"Note {argt} has been deleted!"
+      for item in Book:
+        if str(item) == str(key):
+          s = f"Note {key} has been deleted!"
       if s != "":
-        del Book[argt]
         await ctx.send(s)
+        embed = discord.Embed(title=key, description=Book[str(key)], color=0x9ecdc7)
+        await ctx.send(embed=embed)
+        del Book[key]
       else:
-        await ctx.send(f"Note named {argt} doesnt exist")
+        await ctx.send(f"Note named {key} doesnt exist")
     else:
       await ctx.send("Please add the title of the note to delete it")
-    
+
+  @Notes.command(name="Edit",aliases=["edit"], brief="Edits a note")
+  async def edit(self, ctx, *, key=None):#test
+    try:
+      argt = argn = ""
+      key = key.split("-",1)
+      argt = key[0].strip()
+      argn = key[1].strip()
+    except:
+      await ctx.send("Please edit the note like this\n`-n edit <Title> - <new note>`")
+    else:
+      if argt == "" or argn == "":
+        await ctx.send("Please edit the note like this\n`-n edit <Title> - <new note>`")
+      else:
+        Book = db[str(ctx.message.guild.id)]
+        flag = False
+        for key in Book:
+          if str(key) == str(argt):
+            flag = True
+        if flag:
+          await ctx.send("This is the previous note:")
+          embed = discord.Embed(title=argt, description=Book[str(argt)], color=0x9ecdc7)
+          await ctx.send(embed=embed)
+          Book[str(argt)] = str(argn)
+          await ctx.send("The note has been edited!")
+          embed = discord.Embed(title=argt, description=Book[str(argt)], color=0x9ecdc7)
+          await ctx.send(embed=embed)
+        else:
+          await ctx.send("This note doesnt exist, to create a new note do `-n new <title> - <Note>`")
+  
   @Notes.command(name="Show",aliases=["show"], brief="Shows a specific note")
   async def show(self, ctx, *, arg=None):
     if arg != None:
@@ -106,7 +146,7 @@ class General(commands.Cog):
       embed = None
       for key in Book:
         if str(key) == str(arg):
-          embed = discord.Embed(title=key, description=Book[str(key)])
+          embed = discord.Embed(title=key, description=Book[str(key)], color=0x9ecdc7)
       if embed != None:
         await ctx.send(embed=embed)
       else:
